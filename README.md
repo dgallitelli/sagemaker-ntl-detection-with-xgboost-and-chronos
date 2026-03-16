@@ -29,8 +29,6 @@ To test these three approaches under controlled conditions, we use the **SGCC** 
 - Binary labels: 0 = normal, 1 = confirmed theft (verified by on-site inspection)
 - ~8% theft rate
 
-Requires Kaggle credentials (`~/.kaggle/kaggle.json`).
-
 ### Results at F1-optimal threshold
 
 | Metric | A: Baseline (t=0.665) | **B: Enhanced (t=0.660)** | C: Forecast+Classify (t=0.578) |
