@@ -2,6 +2,8 @@
 
 Detect electricity theft by combining **zero-shot time-series forecasting** (Chronos-2) with **gradient-boosted classification** (XGBoost) on Amazon SageMaker.
 
+![Comparison Results](comparison_results.png)
+
 ## Problem
 
 Utility companies detect Non-Technical Losses (NTL) — meter bypass, tampering, illegal connections — using classifiers on raw consumption data. These classifiers produce high false positive rates because they can't distinguish seasonal or legitimate consumption spikes from actual theft. Each false positive triggers a wasted field inspection — expensive and damaging to customer trust.
@@ -12,9 +14,9 @@ Three approaches on the same dataset, same train/test split, same XGBoost classi
 
 | Notebook | Approach | Features | Hypothesis |
 |----------|----------|----------|------------|
-| `01-approach-a-baseline` | Baseline Classifier | Raw consumption stats (mean, std, skew, etc.) | Current state — catches theft but many false positives |
-| `02-approach-b-enhanced` | Enhanced Classifier | Baseline + temporal patterns, periodicity, trend | Better features = fewer false positives |
-| `03-approach-c-forecast-classify` | Forecast + Classify | Chronos-2 forecast residuals (actual - predicted) | Remove seasonal noise first, then classify on anomalies |
+| `01-baseline` | Baseline Classifier | Raw consumption stats (mean, std, skew, etc.) | Current state — catches theft but many false positives |
+| `02-enhanced` | Enhanced Classifier | Baseline + temporal patterns, periodicity, trend | Better features = fewer false positives |
+| `03-forecast-classify` | Forecast + Classify | Chronos-2 forecast residuals (actual - predicted) | Remove seasonal noise first, then classify on anomalies |
 | `04-comparison` | Head-to-head | Loads results from A/B/C | Side-by-side metrics, PR curves, operational impact |
 
 The key insight behind Approach C: *"Your classifier tries to find a needle in a haystack. We remove the hay first."*
@@ -54,12 +56,12 @@ pip install -r requirements.txt  # TODO: add top-level requirements.txt
 export SAGEMAKER_EXECUTION_ROLE="arn:aws:iam::YOUR_ACCOUNT:role/YOUR_ROLE"
 
 # 3. Run Approaches A and B (no dependencies between them)
-jupyter nbconvert --execute 01-approach-a-baseline.ipynb --to notebook
-jupyter nbconvert --execute 02-approach-b-enhanced.ipynb --to notebook
+jupyter nbconvert --execute 01-baseline.ipynb --to notebook
+jupyter nbconvert --execute 02-enhanced.ipynb --to notebook
 
 # 4. Deploy Chronos-2 endpoint, then run Approach C
 python chronos-endpoint/deploy.py
-jupyter nbconvert --execute 03-approach-c-forecast-classify.ipynb --to notebook
+jupyter nbconvert --execute 03-forecast-classify.ipynb --to notebook
 
 # 5. Run comparison (works with whatever results exist)
 jupyter nbconvert --execute 04-comparison.ipynb --to notebook
@@ -73,9 +75,9 @@ python chronos-endpoint/deploy.py --delete
 ```
 ├── README.md
 ├── utils.py                              # Shared module
-├── 01-approach-a-baseline.ipynb          # Approach A — run first
-├── 02-approach-b-enhanced.ipynb          # Approach B — run first
-├── 03-approach-c-forecast-classify.ipynb # Approach C — needs Chronos-2 endpoint
+├── 01-baseline.ipynb                     # Approach A — run first
+├── 02-enhanced.ipynb                     # Approach B — run first
+├── 03-forecast-classify.ipynb            # Approach C — needs Chronos-2 endpoint
 ├── 04-comparison.ipynb                   # Run after approach notebooks
 ├── chronos-endpoint/
 │   ├── deploy.py                         # Deploy / test / delete endpoint
@@ -84,10 +86,7 @@ python chronos-endpoint/deploy.py --delete
 ├── training/
 │   ├── train.py                          # XGBoost script (runs inside SageMaker)
 │   └── requirements.txt
-└── results/                              # Auto-populated by each notebook
-    ├── approach-a.json
-    ├── approach-b.json
-    └── approach-c.json
+└── results/                              # Auto-populated by each notebook (gitignored)
 ```
 
 ## Key Technical Decisions
