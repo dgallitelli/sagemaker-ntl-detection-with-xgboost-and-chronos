@@ -4,6 +4,8 @@ Detect electricity theft by combining **zero-shot time-series forecasting** (Chr
 
 ![Comparison Results](comparison_results.png)
 
+**On the SGCC dataset**, Approach B (enhanced features) leads with the best AUC (0.778), precision (34.3% at optimal threshold), and fewest false positives (535). Approach A is a close second. Approach C underperforms here because the SGCC data is daily and lacks strong seasonality — the exact conditions where raw statistical features already work well. Approach C's value emerges on real-world data with higher granularity (hourly/15-min), real weather effects, and concept drift, where the forecast layer removes noise that statistical features cannot.
+
 ## Problem
 
 Utility companies detect Non-Technical Losses (NTL) — meter bypass, tampering, illegal connections — using classifiers on raw consumption data. These classifiers produce high false positive rates because they can't distinguish seasonal or legitimate consumption spikes from actual theft. Each false positive triggers a wasted field inspection — expensive and damaging to customer trust.
