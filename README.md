@@ -47,9 +47,9 @@ Published benchmarks on this dataset report significantly higher metrics than ou
 
 | Source | Model | Precision | F1 | AUC |
 |--------|-------|-----------|-----|-----|
-| Khan et al. 2020 | VGG-16 + FA-XGBoost + Adasyn | 93.0% | 93.7% | 0.959 |
-| Madbouly et al. 2025 | CNN-XGB hybrid | 90.6% | 91.2% | 0.93 |
-| Khan et al. 2020 | XGBoost (no oversampling) | 60.0% | 59.0% | 0.632 |
+| [Khan et al. 2020](https://doi.org/10.3390/su12198023) | VGG-16 + FA-XGBoost + Adasyn | 93.0% | 93.7% | 0.959 |
+| [Madbouly et al. 2025](https://doi.org/10.56979/801/2024) | CNN-XGB hybrid | 90.6% | 91.2% | 0.93 |
+| [Khan et al. 2020](https://doi.org/10.3390/su12198023) | XGBoost (no oversampling) | 60.0% | 59.0% | 0.632 |
 | **Ours (B: Enhanced)** | **XGBoost** | **34.3%** | **36.3%** | **0.778** |
 
 The gap is real. Published approaches use more sophisticated pipelines: synthetic oversampling (SMOTE/Adasyn), deep feature extraction (VGG-16, CNN), advanced hyperparameter optimization (Firefly algorithm), and different evaluation protocols.
