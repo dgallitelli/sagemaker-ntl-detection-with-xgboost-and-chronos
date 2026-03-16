@@ -41,18 +41,20 @@ To test these three approaches under controlled conditions, we use the **SGCC** 
 
 **B wins on this dataset.** SGCC has clean, daily consumption patterns where statistical features capture the signal well. Approach C underperforms here precisely because SGCC lacks the conditions where forecasting shines — strong seasonality, weather effects, and concept drift. On real-world data with higher granularity (hourly/15-min), real weather, and evolving consumption patterns, the forecast layer removes noise that statistical features cannot, and Approach C's advantage grows.
 
-### How we compare to published results
+### Context: published results on SGCC
 
-Most papers on the SGCC dataset report 90%+ precision and F1. The difference is methodology: those results use **synthetic oversampling** (SMOTE/Adasyn) to balance the 8% theft rate before training. We deliberately avoid this — using `scale_pos_weight` instead — because oversampling inflates metrics in ways that don't transfer to production.
+Published benchmarks on this dataset report significantly higher metrics than ours:
 
-| Source | Model | Oversampling | Precision | F1 | AUC |
-|--------|-------|-------------|-----------|-----|-----|
-| Khan et al. 2020 | VGG-16 + FA-XGBoost | Adasyn | 93.0% | 93.7% | 0.959 |
-| Khan et al. 2020 | XGBoost (same, no Adasyn) | None | 60.0% | 59.0% | 0.632 |
-| Madbouly et al. 2025 | CNN-XGB hybrid | N/A | 90.6% | 91.2% | 0.93 |
-| **Ours (B: Enhanced)** | **XGBoost** | **None** | **34.3%** | **36.3%** | **0.778** |
+| Source | Model | Precision | F1 | AUC |
+|--------|-------|-----------|-----|-----|
+| Khan et al. 2020 | VGG-16 + FA-XGBoost + Adasyn | 93.0% | 93.7% | 0.959 |
+| Madbouly et al. 2025 | CNN-XGB hybrid | 90.6% | 91.2% | 0.93 |
+| Khan et al. 2020 | XGBoost (no oversampling) | 60.0% | 59.0% | 0.632 |
+| **Ours (B: Enhanced)** | **XGBoost** | **34.3%** | **36.3%** | **0.778** |
 
-Our AUC (0.778) significantly exceeds the no-oversampling XGBoost baseline from the literature (0.632). The precision gap vs. oversampled models is expected — those models train on a 50/50 synthetic split that doesn't reflect the real 92/8 class distribution.
+The gap is real. Published approaches use more sophisticated pipelines: synthetic oversampling (SMOTE/Adasyn), deep feature extraction (VGG-16, CNN), advanced hyperparameter optimization (Firefly algorithm), and different evaluation protocols.
+
+**This repo is not a SOTA attempt.** It's a teaching demo that compares three feature engineering strategies — raw statistics, enhanced temporal features, and forecast residuals — on the same minimal pipeline. The value is the methodology comparison, not absolute numbers.
 
 ## Infrastructure
 
