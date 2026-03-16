@@ -1,8 +1,44 @@
-# Non-Technical Loss Detection with Chronos-2 and XGBoost
+# Electricity Theft Detection on SageMaker: A Feature Engineering Comparison
 
-Detect electricity theft by combining **zero-shot time-series forecasting** (Chronos-2) with **gradient-boosted classification** (XGBoost) on Amazon SageMaker.
+> **Disclaimer:** This is a hands-on tutorial comparing three feature engineering strategies for Non-Technical Loss (NTL) detection. It is **not** a state-of-the-art benchmark — it uses a minimal pipeline to isolate the effect of input features on classification performance. See [published results on SGCC](#context-published-results-on-sgcc) for context.
 
-![Comparison Results](comparison_results.png)
+```mermaid
+flowchart LR
+    subgraph DATA["Data Layer"]
+        SM["Smart Meter\nReadings"]
+        WX["Weather\nData"]
+        CAL["Calendar\n& Holidays"]
+    end
+
+    subgraph FORECAST["Stage 1: Forecast"]
+        CH["Chronos-2\n(zero-shot)"]
+        RES["Residuals\n= Actual - Expected"]
+    end
+
+    subgraph CLASSIFY["Stage 2: Classify"]
+        FE["Feature\nEngineering"]
+        XGB["XGBoost\nClassifier"]
+    end
+
+    subgraph OUTPUT["Output"]
+        RANK["Ranked\nAlert List"]
+    end
+
+    SM --> CH
+    WX --> CH
+    CAL --> CH
+    CH --> RES
+    SM --> RES
+    RES --> FE
+    SM --> FE
+    FE --> XGB
+    XGB --> RANK
+
+    style DATA fill:#232F3E,color:#fff,stroke:#FF9900
+    style FORECAST fill:#1B66C9,color:#fff,stroke:#1B66C9
+    style CLASSIFY fill:#2E7D32,color:#fff,stroke:#2E7D32
+    style OUTPUT fill:#6A1B9A,color:#fff,stroke:#6A1B9A
+```
 
 ## Problem
 
@@ -30,6 +66,8 @@ To test these three approaches under controlled conditions, we use the **SGCC** 
 - ~8% theft rate
 
 ### Results at F1-optimal threshold
+
+![Comparison Results](comparison_results.png)
 
 | Metric | A: Baseline (t=0.665) | **B: Enhanced (t=0.660)** | C: Forecast+Classify (t=0.578) |
 |--------|----------------------|--------------------------|-------------------------------|
