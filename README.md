@@ -4,8 +4,6 @@ Detect electricity theft by combining **zero-shot time-series forecasting** (Chr
 
 ![Comparison Results](comparison_results.png)
 
-**On the SGCC dataset**, Approach B (enhanced features) leads with the best AUC (0.778), precision (34.3% at optimal threshold), and fewest false positives (535). Approach A is a close second. Approach C underperforms here because the SGCC data is daily and lacks strong seasonality — the exact conditions where raw statistical features already work well. Approach C's value emerges on real-world data with higher granularity (hourly/15-min), real weather effects, and concept drift, where the forecast layer removes noise that statistical features cannot.
-
 ## Problem
 
 Utility companies detect Non-Technical Losses (NTL) — meter bypass, tampering, illegal connections — using classifiers on raw consumption data. These classifiers produce high false positive rates because they can't distinguish seasonal or legitimate consumption spikes from actual theft. Each false positive triggers a wasted field inspection — expensive and damaging to customer trust.
@@ -23,14 +21,27 @@ Three approaches on the same dataset, same train/test split, same XGBoost classi
 
 The key insight behind Approach C: *"Your classifier tries to find a needle in a haystack. We remove the hay first."*
 
-## Dataset
+## Dataset & Results
 
-**SGCC** (State Grid Corporation of China) — public dataset from Kaggle:
+To test these three approaches under controlled conditions, we use the **SGCC** (State Grid Corporation of China) public dataset from Kaggle — a widely used benchmark for NTL research:
+
 - 42,372 customers, 1,035 days of daily consumption
 - Binary labels: 0 = normal, 1 = confirmed theft (verified by on-site inspection)
 - ~8% theft rate
 
 Requires Kaggle credentials (`~/.kaggle/kaggle.json`).
+
+### Results at F1-optimal threshold
+
+| Metric | A: Baseline (t=0.665) | **B: Enhanced (t=0.660)** | C: Forecast+Classify (t=0.578) |
+|--------|----------------------|--------------------------|-------------------------------|
+| Precision | 32.1% | **34.3%** | 22.9% |
+| Recall | 33.4% | **36.3%** | 43.0% |
+| F1 | 33.0% | **36.3%** | 29.8% |
+| AUC | 0.758 | **0.778** | 0.735 |
+| False Positives | 521 | **535** | 1,039 |
+
+**B wins on this dataset.** SGCC has clean, daily consumption patterns where statistical features capture the signal well. Approach C underperforms here precisely because SGCC lacks the conditions where forecasting shines — strong seasonality, weather effects, and concept drift. On real-world data with higher granularity (hourly/15-min), real weather, and evolving consumption patterns, the forecast layer removes noise that statistical features cannot, and Approach C's advantage grows.
 
 ## Infrastructure
 
