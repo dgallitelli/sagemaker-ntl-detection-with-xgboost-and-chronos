@@ -52,7 +52,7 @@ Evaluation & plots
 # 1. Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt  # TODO: add top-level requirements.txt
+pip install -r requirements.txt
 
 # 2. Set your SageMaker execution role (or it will auto-detect from your session)
 export SAGEMAKER_EXECUTION_ROLE="arn:aws:iam::YOUR_ACCOUNT:role/YOUR_ROLE"
