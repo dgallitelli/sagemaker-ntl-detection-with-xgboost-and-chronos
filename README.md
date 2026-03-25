@@ -1,5 +1,7 @@
 # Electricity Theft Detection on SageMaker: A Feature Engineering Comparison
 
+You can read a blog post about this implementation on [Medium](https://dgallitelli95.medium.com/stop-chasing-false-positives-how-time-series-forecasting-can-fix-electricity-theft-detection-ccb96c245183)!
+
 > **Disclaimer:** This is a hands-on tutorial comparing three feature engineering strategies for Non-Technical Loss (NTL) detection. It is **not** a state-of-the-art benchmark — it uses a minimal pipeline to isolate the effect of input features on classification performance. See [published results on SGCC](#context-published-results-on-sgcc) for context.
 
 ```mermaid
